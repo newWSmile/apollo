@@ -31,12 +31,6 @@ public class TitanSettings {
   public String getTitanUrl() {
     Env env = EnvUtils.transformEnv(Foundation.server().getEnvType());
     switch (env) {
-      case FAT:
-      case FWS:
-        return fatTitanUrl;
-      case UAT:
-        return uatTitanUrl;
-      case TOOLS:
       case PRO:
         return proTitanUrl;
       default:
@@ -47,12 +41,6 @@ public class TitanSettings {
   public String getTitanDbname() {
     Env env = EnvUtils.transformEnv(Foundation.server().getEnvType());
     switch (env) {
-      case FAT:
-      case FWS:
-        return fatTitanDbname;
-      case UAT:
-        return uatTitanDbname;
-      case TOOLS:
       case PRO:
         return proTitanDbname;
       default:

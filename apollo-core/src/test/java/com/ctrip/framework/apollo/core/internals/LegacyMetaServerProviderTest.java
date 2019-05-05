@@ -1,10 +1,10 @@
 package com.ctrip.framework.apollo.core.internals;
 
-import static org.junit.Assert.assertEquals;
-
 import com.ctrip.framework.apollo.core.enums.Env;
 import org.junit.After;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class LegacyMetaServerProviderTest {
 
@@ -31,6 +31,6 @@ public class LegacyMetaServerProviderTest {
     LegacyMetaServerProvider legacyMetaServerProvider = new LegacyMetaServerProvider();
 
     assertEquals(someDevMetaAddress, legacyMetaServerProvider.getMetaServerAddress(Env.DEV));
-    assertEquals(someFatMetaAddress, legacyMetaServerProvider.getMetaServerAddress(Env.FAT));
+    assertEquals(someFatMetaAddress, legacyMetaServerProvider.getMetaServerAddress(Env.TEST));
   }
 }

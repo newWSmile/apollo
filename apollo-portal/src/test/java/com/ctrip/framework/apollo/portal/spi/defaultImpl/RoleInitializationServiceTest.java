@@ -164,7 +164,7 @@ public class RoleInitializationServiceTest extends AbstractUnitTest {
   private List<Env> mockPortalSupportedEnvs(){
     List<Env> envArray = new ArrayList<>();
     envArray.add(Env.DEV);
-    envArray.add(Env.FAT);
+    envArray.add(Env.TEST);
     return envArray;
   }
 
