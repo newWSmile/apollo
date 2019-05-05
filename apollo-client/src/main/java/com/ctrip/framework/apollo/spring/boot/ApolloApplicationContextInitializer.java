@@ -3,12 +3,13 @@ package com.ctrip.framework.apollo.spring.boot;
 import com.ctrip.framework.apollo.Config;
 import com.ctrip.framework.apollo.ConfigService;
 import com.ctrip.framework.apollo.core.ConfigConsts;
+import com.ctrip.framework.apollo.openapi.client.ApolloOpenApiClient;
+import com.ctrip.framework.apollo.openapi.dto.OpenNamespaceDTO;
 import com.ctrip.framework.apollo.spring.config.ConfigPropertySourceFactory;
 import com.ctrip.framework.apollo.spring.config.PropertySourcesConstants;
 import com.ctrip.framework.apollo.spring.util.SpringInjector;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -18,6 +19,10 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.Ordered;
 import org.springframework.core.env.CompositePropertySource;
 import org.springframework.core.env.ConfigurableEnvironment;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Initialize apollo system properties and inject the Apollo config in Spring Boot bootstrap phase
@@ -95,9 +100,32 @@ public class ApolloApplicationContextInitializer implements
       return;
     }
 
-    String namespaces = environment.getProperty(PropertySourcesConstants.APOLLO_BOOTSTRAP_NAMESPACES, ConfigConsts.NAMESPACE_APPLICATION);
-    logger.debug("Apollo bootstrap namespaces: {}", namespaces);
-    List<String> namespaceList = NAMESPACE_SPLITTER.splitToList(namespaces);
+//    String namespaces = environment.getProperty(PropertySourcesConstants.APOLLO_BOOTSTRAP_NAMESPACES, ConfigConsts.NAMESPACE_APPLICATION);
+
+    String portalUrl = Objects.toString(environment.getSystemProperties().get("portal.url"));
+    ApolloOpenApiClient client = ApolloOpenApiClient.newBuilder()
+            .withPortalUrl(portalUrl)
+            .withToken("")//使用密码不要签名
+            .build();
+
+    String appId = Objects.toString(environment.getSystemProperties().get("app.id"));
+
+    String env = Objects.toString(environment.getSystemProperties().get("spring.profiles.active"));
+
+    String[] clusterNames = environment.getDefaultProfiles();
+    String clusterName = null ;
+    if (null == clusterNames || clusterNames.length == 0){
+      clusterName = "default";
+    }else{
+      clusterName = clusterNames[0];
+    }
+    String password = Objects.toString(environment.getSystemProperties().get("password"));
+    List<OpenNamespaceDTO> list =  client.getNamespaces(appId,env,clusterName,password);
+
+    List<String> namespaceList  =  list.stream().map(OpenNamespaceDTO::getNamespaceName).collect(Collectors.toList());
+
+//    logger.debug("Apollo bootstrap namespaces: {}", namespaces);
+//    List<String> namespaceList = NAMESPACE_SPLITTER.splitToList(namespaces);
 
     CompositePropertySource composite = new CompositePropertySource(PropertySourcesConstants.APOLLO_BOOTSTRAP_PROPERTY_SOURCE_NAME);
     for (String namespace : namespaceList) {

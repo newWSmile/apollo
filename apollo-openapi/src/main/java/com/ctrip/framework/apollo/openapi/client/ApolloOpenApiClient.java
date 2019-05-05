@@ -77,8 +77,8 @@ public class ApolloOpenApiClient {
   /**
    * Get the namespaces
    */
-  public List<OpenNamespaceDTO> getNamespaces(String appId, String env, String clusterName) {
-    return namespaceService.getNamespaces(appId, env, clusterName);
+  public List<OpenNamespaceDTO> getNamespaces(String appId, String env, String clusterName,String password) {
+    return namespaceService.getNamespaces(appId, env, clusterName,password);
   }
 
   /**
@@ -217,7 +217,6 @@ public class ApolloOpenApiClient {
     public ApolloOpenApiClient build() {
       Preconditions.checkArgument(!Strings.isNullOrEmpty(portalUrl), "Portal url should not be null or empty!");
       Preconditions.checkArgument(portalUrl.startsWith("http://") || portalUrl.startsWith("https://"), "Portal url should start with http:// or https://" );
-      Preconditions.checkArgument(!Strings.isNullOrEmpty(token), "Token should not be null or empty!");
 
       if (connectTimeout < 0) {
         connectTimeout = ApolloOpenApiConstants.DEFAULT_CONNECT_TIMEOUT;

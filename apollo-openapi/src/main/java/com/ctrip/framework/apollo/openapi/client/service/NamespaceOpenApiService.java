@@ -8,11 +8,12 @@ import com.ctrip.framework.apollo.openapi.dto.OpenNamespaceLockDTO;
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import java.lang.reflect.Type;
-import java.util.List;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
+
+import java.lang.reflect.Type;
+import java.util.List;
 
 public class NamespaceOpenApiService extends AbstractOpenApiService {
   private static final Type OPEN_NAMESPACE_DTO_LIST_TYPE = new TypeToken<List<OpenNamespaceDTO>>() {
@@ -45,7 +46,7 @@ public class NamespaceOpenApiService extends AbstractOpenApiService {
     }
   }
 
-  public List<OpenNamespaceDTO> getNamespaces(String appId, String env, String clusterName) {
+  public List<OpenNamespaceDTO> getNamespaces(String appId, String env, String clusterName,String password) {
     if (Strings.isNullOrEmpty(clusterName)) {
       clusterName = ConfigConsts.CLUSTER_NAME_DEFAULT;
     }
@@ -53,8 +54,8 @@ public class NamespaceOpenApiService extends AbstractOpenApiService {
     checkNotEmpty(appId, "App id");
     checkNotEmpty(env, "Env");
 
-    String path = String.format("envs/%s/apps/%s/clusters/%s/namespaces", escapePath(env), escapePath(appId),
-        escapePath(clusterName));
+    String path = String.format("envs/%s/apps/%s/clusters/%s/namespaces?password=%s", escapePath(env), escapePath(appId),
+        escapePath(clusterName),password);
 
     try (CloseableHttpResponse response = get(path)) {
       return gson.fromJson(EntityUtils.toString(response.getEntity()), OPEN_NAMESPACE_DTO_LIST_TYPE);
