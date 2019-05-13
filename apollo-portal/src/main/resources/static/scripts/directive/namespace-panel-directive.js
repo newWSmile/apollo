@@ -92,7 +92,7 @@ function directive($window, toastr, AppUtil, EventManager, PermissionService, Na
                 //namespace view name hide suffix
                 namespace.viewName = namespace.baseInfo.namespaceName.replace(".xml", "").replace(
                             ".properties", "").replace(".json", "").replace(".yml", "")
-                            .replace(".yaml", "");
+                            .replace(".yaml", "").replace(".txt", "");
             }
 
             function init() {
@@ -891,7 +891,7 @@ function directive($window, toastr, AppUtil, EventManager, PermissionService, Na
                 $blockScrolling: Infinity,
                 showPrintMargin: false,
                 theme: 'eclipse',
-                mode: scope.namespace.format === 'yml' ? 'yaml' : scope.namespace.format,
+                mode: scope.namespace.format === 'yml' ? 'yaml' : (scope.namespace.format === 'txt' ? undefined : scope.namespace.format),
                 onLoad: function (_editor) {
                     _editor.$blockScrolling = Infinity;
                     _editor.setOptions({
