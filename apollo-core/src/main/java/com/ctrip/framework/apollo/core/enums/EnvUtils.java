@@ -18,6 +18,8 @@ public final class EnvUtils {
         return Env.LOCAL;
       case "TEST":
         return Env.TEST;
+      case "RELEASE":
+        return Env.RELEASE;
       default:
         return Env.UNKNOWN;
     }

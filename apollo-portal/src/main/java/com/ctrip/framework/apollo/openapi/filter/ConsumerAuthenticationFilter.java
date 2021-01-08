@@ -1,14 +1,18 @@
 package com.ctrip.framework.apollo.openapi.filter;
 
-import com.ctrip.framework.apollo.core.utils.StringUtils;
 import com.ctrip.framework.apollo.openapi.util.ConsumerAuditUtil;
 import com.ctrip.framework.apollo.openapi.util.ConsumerAuthUtil;
 
-import javax.servlet.*;
+import java.io.IOException;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Objects;
 
 /**
  * @author Jason Song(song_s@ctrip.com)
@@ -37,15 +41,13 @@ public class ConsumerAuthenticationFilter implements Filter {
 
     Long consumerId = consumerAuthUtil.getConsumerId(token);
 
-    String password = Objects.toString(request.getParameter("password"));
-    if (!StringUtils.equals("wanshifu", password)) {
-      if (consumerId == null) {
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
-        return;
-      }
-      consumerAuthUtil.storeConsumerId(request, consumerId);
-      consumerAuditUtil.audit(request, consumerId);
+    if (consumerId == null) {
+      response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+      return;
     }
+
+    consumerAuthUtil.storeConsumerId(request, consumerId);
+    consumerAuditUtil.audit(request, consumerId);
 
     chain.doFilter(req, resp);
   }

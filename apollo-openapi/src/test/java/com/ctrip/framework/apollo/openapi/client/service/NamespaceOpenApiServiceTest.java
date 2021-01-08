@@ -8,8 +8,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static junit.framework.TestCase.assertEquals;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class NamespaceOpenApiServiceTest extends AbstractOpenApiServiceTest {
 
@@ -65,14 +67,14 @@ public class NamespaceOpenApiServiceTest extends AbstractOpenApiServiceTest {
 
     final ArgumentCaptor<HttpGet> request = ArgumentCaptor.forClass(HttpGet.class);
 
-    namespaceOpenApiService.getNamespaces(someAppId, someEnv, someCluster,"");
+    namespaceOpenApiService.getNamespaces(someAppId, someEnv, someCluster);
 
     verify(httpClient, times(1)).execute(request.capture());
 
     HttpGet get = request.getValue();
 
     assertEquals(String
-            .format("%s/envs/%s/apps/%s/clusters/%s/namespaces?password=%s", someBaseUrl, someEnv, someAppId, someCluster,""),
+            .format("%s/envs/%s/apps/%s/clusters/%s/namespaces", someBaseUrl, someEnv, someAppId, someCluster),
         get.getURI().toString());
   }
 
@@ -80,7 +82,7 @@ public class NamespaceOpenApiServiceTest extends AbstractOpenApiServiceTest {
   public void testGetNamespacesWithError() throws Exception {
     when(statusLine.getStatusCode()).thenReturn(404);
 
-    namespaceOpenApiService.getNamespaces(someAppId, someEnv, someCluster,"");
+    namespaceOpenApiService.getNamespaces(someAppId, someEnv, someCluster);
   }
 
   @Test
