@@ -26,7 +26,7 @@ public class LegacyMetaServerProviderTest {
     String someDevMetaAddress = "someMetaAddress";
     String someFatMetaAddress = "someFatMetaAddress";
     System.setProperty("dev_meta", someDevMetaAddress);
-    System.setProperty("fat_meta", someFatMetaAddress);
+    System.setProperty("test_meta", someFatMetaAddress);
 
     LegacyMetaServerProvider legacyMetaServerProvider = new LegacyMetaServerProvider();
 
